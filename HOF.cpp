@@ -20,10 +20,12 @@ double total(int n, double (*cost)(double, int)) {
 int main() {
     int n;
     cout << "Сколько позиций: ";
+
     if (!(cin >> n) || n <= 0) {
         cout << "Введите положительное количество позиций.\n";
         return 1;
     }
-    cout << "Итого: " << total(n, itemCost);
+
+    cout << "Итого: " << total(n, itemCost) << endl;
     return 0;
 }

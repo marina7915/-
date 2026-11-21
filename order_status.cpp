@@ -1,76 +1,60 @@
-#include <cstdint>
 #include <iostream>
-
-enum class Status : std::uint8_t {
-    Created,
-    Paid,
-    Shipped,
-    Delivered,
-    Cancelled
-};
+using namespace std;
 
 struct Order {
-    std::uint32_t id;
+    int id;
     double total;
-    Status status;
+    int status;
 };
 
-bool canChangeStatus(Status from, Status to) {
-    switch (from) {
-        case Status::Created:
-            return to == Status::Paid || to == Status::Cancelled;
-        case Status::Paid:
-            return to == Status::Shipped || to == Status::Cancelled;
-        case Status::Shipped:
-            return to == Status::Delivered;
-        case Status::Delivered:
-        case Status::Cancelled:
-            return false;
-    }
-    return false;
+bool canChangeStatus(int from, int to) {
+    if (from == 1 && (to == 2 || to == 5))
+        return true;
+    else if (from == 2 && (to == 3 || to == 5))
+        return true;
+    else if (from == 3 && to == 4)
+        return true;
+    else
+        return false;
 }
 
-bool changeStatus(Order& order, Status newStatus) {
-    if (!canChangeStatus(order.status, newStatus)) {
+bool changeStatus(Order& order, int newStatus) {
+    if (canChangeStatus(order.status, newStatus)) {
+        order.status = newStatus;
+        return true;
+    } else {
         return false;
     }
-
-    order.status = newStatus;
-    return true;
 }
 
-const char* statusName(Status status) {
-    switch (status) {
-        case Status::Created:   return "создан";
-        case Status::Paid:      return "оплачен";
-        case Status::Shipped:   return "отправлен";
-        case Status::Delivered: return "доставлен";
-        case Status::Cancelled: return "отменён";
-    }
-    return "неизвестен";
+const char* statusName(int status) {
+    if (status == 1) return "создан";
+    else if (status == 2) return "оплачен";
+    else if (status == 3) return "отправлен";
+    else if (status == 4) return "доставлен";
+    else if (status == 5) return "отменён";
+    else return "неизвестен";
 }
 
 int main() {
-    Order order{1001, 2500.0, Status::Created};
+    Order order = {1001, 2500.0, 1};
 
-    std::cout << "Заказ №" << order.id << ", сумма: " << order.total << '\n';
+    cout << "Заказ №" << order.id
+         << ", сумма: " << order.total << '\n';
 
-    const Status steps[] = {
-        Status::Paid,
-        Status::Shipped,
-        Status::Delivered
-    };
+    int steps[] = {2, 3, 4};
 
-    for (Status nextStatus : steps) {
-        if (changeStatus(order, nextStatus)) {
-            std::cout << "Статус изменён: " << statusName(order.status) << '\n';
+    for (int i = 0; i < 3; i++) {
+        if (changeStatus(order, steps[i])) {
+            cout << "Статус изменён: "
+                 << statusName(order.status) << '\n';
         } else {
-            std::cout << "Переход запрещён\n";
+            cout << "Переход запрещён\n";
         }
     }
 
-    if (!changeStatus(order, Status::Cancelled)) {
-        std::cout << "Нельзя изменить статус завершённого заказа\n";
+    if (!changeStatus(order, 5)) {
+        cout << "Нельзя изменить статус завершённого заказа\n";
     }
 
     return 0;

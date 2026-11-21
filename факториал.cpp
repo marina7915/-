@@ -12,9 +12,10 @@ long long fib(int n) {
 }
 
 long long fact(int n) {
-    long long r = 1;
-    for (int i = 2; i <= n; ++i) r *= i;
-    return r;
+    if (n <= 1) {
+        return 1;
+    }
+    return n * fact(n - 1);
 }
 
 void divisors(int n) {
@@ -22,7 +23,9 @@ void divisors(int n) {
     for (; i * i <= n; ++i)          // малые делители
         if (n % i == 0) cout << i << ' ';
     for (--i; i >= 1; --i)           // парные большие делители
-        if (n % i == 0 && i != n / i) cout << n / i << ' ';
+        if (n % i == 0 && i != n / i) cout << n / i << ' ';//Условие i != n / i не позволяет вывести дважды один и тот же делитель, если число — полный квадрат. Например, для 36 число 6 не повторится.
+
+
 }
 
 int main() {

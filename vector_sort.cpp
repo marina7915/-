@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -7,22 +6,34 @@ int main() {
     std::cin >> n;
 
     std::vector<int> numbers(n);
-    for (int& number : numbers) {
-        std::cin >> number;
+    for (int i = 0; i < n; ++i) {
+        std::cin >> numbers[i];
     }
 
-    numbers.erase(
-        std::remove_if(numbers.begin(), numbers.end(),
-                       [](int number) { return number < 0; }),
-        numbers.end());
+    // Создаем новый вектор только для неотрицательных чисел
+    std::vector<int> filtered;
+    for (int i = 0; i < n; ++i) {
+        if (numbers[i] >= 0) {
+            filtered.push_back(numbers[i]);
+        }
+    }
 
-    std::sort(numbers.begin(), numbers.end());
-
-    for (std::size_t i = 0; i < numbers.size(); ++i) {
+    // Сортировка пузырьком
+    int size = filtered.size();
+    for (int i = 0; i < size - 1; ++i) {
+        for (int j = 0; j < size - 1 - i; ++j) {
+            if (filtered[j] > filtered[j + 1]) {
+                int temp = filtered[j];
+                filtered[j] = filtered[j + 1];
+                filtered[j + 1] = temp;
+            }
+        }
+    }
+    for (int i = 0; i < size; ++i) {
         if (i > 0) {
             std::cout << ' ';
         }
-        std::cout << numbers[i];
+        std::cout << filtered[i];
     }
     std::cout << '\n';
 
